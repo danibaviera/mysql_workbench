@@ -14,33 +14,38 @@ To run MySQL locally, a Docker container was created using Docker Compose.
 
 The following docker-compose.yml configuration was used :
 
-yaml
+version: "3.8"
+
 services:
   mysql:
     image: mysql:8.0
     container_name: mysql8
     restart: unless-stopped
+
     environment:
-      MYSQL_ROOT_PASSWORD: "choce_your_password"
-      MYSQL_DATABASE: app
-      MYSQL_USER: appuser
-      MYSQL_PASSWORD: apppass
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
     ports:
-      - "Exemplo: 000:000"
+      - "3306:3306"
+
     volumes:
       - mysql_data:/var/lib/mysql
+
     command: >
       --default-authentication-plugin=mysql_native_password
       --bind-address=0.0.0.0
+
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "PORT:000.0.0.1", "-u", "root", "-p", "passwordhere"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 10
 
 volumes:
   mysql_data:
-
 
 ---
 
